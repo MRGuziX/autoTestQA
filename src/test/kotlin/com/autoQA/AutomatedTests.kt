@@ -3,6 +3,7 @@ package com.autoQA
 import org.openqa.selenium.By
 import org.openqa.selenium.WebDriver
 import org.openqa.selenium.chrome.ChromeDriver
+import org.openqa.selenium.support.ui.Select
 import org.testng.Assert
 import org.testng.annotations.AfterTest
 import org.testng.annotations.BeforeTest
@@ -11,7 +12,7 @@ import org.testng.annotations.Test
 
 class AutomatedTests {
 
-    private var driver: WebDriver? = null
+    var driver: WebDriver? = null
     val standardUserAccountLogin = "standard_user"
     val userPassword: String = "secret_sauce"
     val loginTextfieldSelector = "user-name"
@@ -24,12 +25,7 @@ class AutomatedTests {
         driver = ChromeDriver()
     }
 
-    @AfterTest
-    fun tearDownDriver() {
-        driver!!.quit()
-    }
-
-    @BeforeTest
+    @Test(priority = 0)
     fun openWebPage() {
         val url = "https://www.saucedemo.com/"
         driver!!.get(url)
@@ -37,7 +33,7 @@ class AutomatedTests {
         Assert.assertEquals(driver!!.currentUrl, url, "Web page URL did not match!")
     }
 
-    @Test
+    @Test(priority = 1)
     fun loggingStandardUser() {
 
         val loginTextFieldElement = driver!!.findElement(By.id(loginTextfieldSelector))
@@ -50,11 +46,14 @@ class AutomatedTests {
         loginButtonElement.click()
     }
 
-    @Test
-    fun zAddItemToCart() {
+    @Test(priority = 2)
+    fun addItemsToCart() {
 
-        val addToCartElement = driver!!.findElement(By.id("add-to-cart-sauce-labs-bolt-t-shirt"))
-        addToCartElement.click()
+        val addToCartFirstElement = driver!!.findElement(By.id("add-to-cart-sauce-labs-bolt-t-shirt"))
+        addToCartFirstElement.click()
+
+        val addToCartSecondElement = driver!!.findElement(By.id("add-to-cart-sauce-labs-fleece-jacket"))
+        addToCartSecondElement.click()
 
         val itemNameElement = driver!!.findElement(By.cssSelector("#item_1_title_link .inventory_item_name"))
         val itemName = itemNameElement.text
@@ -64,6 +63,75 @@ class AutomatedTests {
 
         val itemCounterElement = driver!!.findElement(By.cssSelector(".shopping_cart_badge"))
         val itemCounter = itemCounterElement.text
+        Assert.assertEquals(itemCounter,"2","Item counts do not match")
+
+        val cartIconElement = driver!!.findElement(By.id("shopping_cart_container"))
+        cartIconElement.click()
+
+        val itemNameInCartElement = driver!!.findElements(By.className("inventory_item_name"))[0].text
+        val itemPriceInCartElement = driver!!.findElements(By.className("inventory_item_price"))[0].text
+        Assert.assertEquals(itemName,itemNameInCartElement,"Names do not match!")
+        Assert.assertEquals(itemPrice,itemPriceInCartElement,"Prices do not match!")
+
+        val continueShoppingButtonElement = driver!!.findElement(By.id("continue-shopping"))
+        continueShoppingButtonElement.click()
 
     }
+
+    @Test(priority = 3)
+    fun removeItemFromCart() {
+
+        val removeItemElement = driver!!.findElement(By.id("remove-sauce-labs-bolt-t-shirt"))
+        removeItemElement.click()
+        val addToCartElement = driver!!.findElement(By.id("add-to-cart-sauce-labs-bolt-t-shirt"))
+        addToCartElement.isDisplayed
+        addToCartElement.click()
+        val cartIconElement = driver!!.findElement(By.id("shopping_cart_container"))
+        cartIconElement.click()
+        //Finding button once again, because DOM has changed since previous search and element cant be find again
+        val removeItemInCartElement = driver!!.findElement(By.id("remove-sauce-labs-bolt-t-shirt"))
+        removeItemInCartElement.click()
+
+        val itemCounterElement = driver!!.findElement(By.cssSelector(".shopping_cart_badge"))
+        val itemCounter = itemCounterElement.text
+        Assert.assertEquals(itemCounter,"1","Item counts do not match")
+
+        val continueShoppingButtonElement = driver!!.findElement(By.id("continue-shopping"))
+        continueShoppingButtonElement.click()
+    }
+
+    @Test(priority = 4)
+    fun sortingNameFromZtoA () {
+
+        val nameOfTheFirstElementBeforeSort = driver!!.findElements(By.className("inventory_item_name"))[0].text
+
+        val sortDropdownElement = Select(driver!!.findElement(By.className("product_sort_container")))
+        sortDropdownElement.selectByVisibleText("Name (Z to A)")
+
+        val nameOfTheFirstElementAfterSort = driver!!.findElements(By.className("inventory_item_name"))[0].text
+
+        Assert.assertNotEquals(nameOfTheFirstElementAfterSort,nameOfTheFirstElementBeforeSort,"First product before and after are the same! Sorting Broken!")
+        }
+
+    @Test(priority = 5)
+    fun sortingPriceFromLowestToHighest () {
+
+        val sortDropdownElement = Select(driver!!.findElement(By.cssSelector(".product_sort_container")))
+        sortDropdownElement.selectByVisibleText("Price (low to high)")
+        val nameOfTheFirstElementBeforeSort = driver!!.findElements(By.className("inventory_item_price"))[0].text
+
+        //Finding button once again, because DOM has changed since previous search and element cant be find again
+        val sortDropdownElement2 = Select(driver!!.findElement(By.cssSelector(".product_sort_container")))
+        sortDropdownElement2.selectByVisibleText("Price (high to low)")
+        val nameOfTheFirstElementAfterSort = driver!!.findElements(By.className("inventory_item_price"))[0].text
+
+        Assert.assertNotEquals(nameOfTheFirstElementAfterSort,nameOfTheFirstElementBeforeSort,"First product cost before and after are the same! Sorting Broken!")
+    }
+
+    @AfterTest
+    fun tearDownDriver() {
+        driver!!.quit()
+    }
+
 }
+
