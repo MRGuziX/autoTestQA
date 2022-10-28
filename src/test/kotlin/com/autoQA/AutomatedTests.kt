@@ -127,6 +127,34 @@ class AutomatedTests {
         Assert.assertNotEquals(nameOfTheFirstElementAfterSort,nameOfTheFirstElementBeforeSort,"First product cost before and after are the same! Sorting Broken!")
     }
 
+    @Test(priority = 6)
+    fun checkoutFormFill() {
+
+        val cartIconElement = driver!!.findElement(By.id("shopping_cart_container"))
+        cartIconElement.click()
+
+        val checkoutButtonElement = driver!!.findElement(By.id("checkout"))
+        checkoutButtonElement.click()
+
+        val firstNameTextFieldElement = driver!!.findElement(By.id("first-name"))
+        val lastNameTextFieldElement = driver!!.findElement(By.id("last-name"))
+        val postalCodeTextFieldElement = driver!!.findElement(By.id("postal-code"))
+        val continueButtonElement = driver!!.findElement((By.id("continue")))
+
+        firstNameTextFieldElement.sendKeys("First Name")
+        lastNameTextFieldElement.sendKeys("Last Name")
+        postalCodeTextFieldElement.sendKeys("12-123")
+        continueButtonElement.click()
+
+        val finishButtonElement = driver!!.findElement(By.id("finish"))
+        finishButtonElement.click()
+
+        val finishOrderTextElement = driver!!.findElement(By.className("complete-header")).text
+        Assert.assertEquals(finishOrderTextElement,"THANK YOU FOR YOUR ORDER", "Finish Order text it is not matching!")
+
+    }
+
+
     @AfterTest
     fun tearDownDriver() {
         driver!!.quit()
