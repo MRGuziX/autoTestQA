@@ -2,9 +2,8 @@ package com.autoQA.utilities
 
 import org.openqa.selenium.By
 import org.openqa.selenium.WebDriver
-import org.openqa.selenium.WebElement
 import org.openqa.selenium.chrome.ChromeDriver
-import java.awt.Button
+import org.openqa.selenium.support.ui.Select
 
 
 open class DriverFunctions {
@@ -28,16 +27,25 @@ open class DriverFunctions {
          driver!!.findElement(By.id(elementID)).click()
      }
 
-     fun getElementTextByCSS (elementCSS: String) {
-         driver!!.findElement(By.cssSelector(elementCSS)).text
+    fun getElementTextByCSS(elementCSS: String): String? {
+        return driver!!.findElement(By.cssSelector(elementCSS)).text
+    }
 
+     fun getElementTextByXPATH (elementXPATH: String): String? {
+        return driver!!.findElement(By.xpath(elementXPATH)).text
      }
 
-     fun getElementTextByXPATH (elementXPATH: String) {
-         driver!!.findElement(By.xpath(elementXPATH)).text
+     fun getElementsTextByClassName (className: String,position: Int): String?{
+         return driver!!.findElements(By.className(className))[position].text
      }
 
-     fun getElementsTextByClassName (className: String,position: Int){
-         driver!!.findElements(By.className(className))[position].text
-     }
+    // TODO: Delete that funciotn duplicate of code 
+    fun getOneOfTheElementFromList(className: String,position: Int): String?{
+        return driver!!.findElements(By.className(className))[position].text
+    }
+
+    fun selectFromDropDown(dropDownClassName: String, visibleText: String ) {
+        val sortDropdownElement = Select(driver!!.findElement(By.className(dropDownClassName)))
+        sortDropdownElement.selectByVisibleText(visibleText)
+    }
 }

@@ -71,14 +71,6 @@ class AutomatedTests : DriverFunctions() {
         val itemPrice = getElementTextByXPATH("//a[@id='item_1_title_link']/..//following-sibling::*[@class='pricebar']/div")
         val itemCounter = getElementTextByCSS(".shopping_cart_badge")
 
-        val text = driver!!.findElement(By.cssSelector("#item_1_title_link .inventory_item_name")).text
-
-        println(text)
-
-        println(itemPrice)
-        println(itemName)
-        println(itemCounter)
-
         Assert.assertEquals(itemCounter,"2","Item counts do not match")
 
         clickOnElementByID("shopping_cart_container")
@@ -95,35 +87,26 @@ class AutomatedTests : DriverFunctions() {
     @Test(priority = 3)
     fun removeItemFromCart() {
 
-        val removeItemElement = driver!!.findElement(By.id("remove-sauce-labs-bolt-t-shirt"))
-        removeItemElement.click()
-
-        val addToCartElement = driver!!.findElement(By.id("add-to-cart-sauce-labs-bolt-t-shirt"))
-        addToCartElement.isDisplayed
-        addToCartElement.click()
-
-        val cartIconElement = driver!!.findElement(By.id("shopping_cart_container"))
-        cartIconElement.click()
+        clickOnElementByID("remove-sauce-labs-bolt-t-shirt")
+        clickOnElementByID("add-to-cart-sauce-labs-bolt-t-shirt")
+        clickOnElementByID("shopping_cart_container")
         //Finding button once again, because DOM has changed since previous search and element cant be find again
-        val removeItemInCartElement = driver!!.findElement(By.id("remove-sauce-labs-bolt-t-shirt"))
-        removeItemInCartElement.click()
+        clickOnElementByID("remove-sauce-labs-bolt-t-shirt")
 
-        val itemCounterElement = driver!!.findElement(By.cssSelector(".shopping_cart_badge"))
-        val itemCounter = itemCounterElement.text
+        val itemCounter = getElementTextByCSS(".shopping_cart_badge")
+
         Assert.assertEquals(itemCounter,"1","Item counts do not match")
 
-        val continueShoppingButtonElement = driver!!.findElement(By.id("continue-shopping"))
-        continueShoppingButtonElement.click()
+        clickOnElementByID("continue-shopping")
     }
 
     @Test(priority = 4)
     fun sortingNameFromZtoA () {
 
-        val nameOfTheFirstElementBeforeSort = driver!!.findElements(By.className("inventory_item_name"))[0].text
-        val sortDropdownElement = Select(driver!!.findElement(By.className("product_sort_container")))
-        sortDropdownElement.selectByVisibleText("Name (Z to A)")
+        val nameOfTheFirstElementBeforeSort = getOneOfTheElementFromList("inventory_item_name",0)
+        selectFromDropDown("product_sort_container","Name (Z to A)")
+        val nameOfTheFirstElementAfterSort = getOneOfTheElementFromList("inventory_item_name",0)
 
-        val nameOfTheFirstElementAfterSort = driver!!.findElements(By.className("inventory_item_name"))[0].text
         Assert.assertNotEquals(nameOfTheFirstElementAfterSort,nameOfTheFirstElementBeforeSort,"First product before and after are the same! Sorting Broken!")
         }
 
@@ -135,10 +118,9 @@ class AutomatedTests : DriverFunctions() {
 
         val nameOfTheFirstElementBeforeSort = driver!!.findElements(By.className("inventory_item_price"))[0].text
         //Finding button once again, because DOM has changed since previous search and element cant be find again
-        val sortDropdownElement2 = Select(driver!!.findElement(By.cssSelector(".product_sort_container")))
-        sortDropdownElement2.selectByVisibleText("Price (high to low)")
+        val nameOfTheFirstElementAfterSort = Select(driver!!.findElement(By.cssSelector(".product_sort_container")))
+        nameOfTheFirstElementAfterSort.selectByVisibleText("Price (high to low)")
 
-        val nameOfTheFirstElementAfterSort = driver!!.findElements(By.className("inventory_item_price"))[0].text
         Assert.assertNotEquals(nameOfTheFirstElementAfterSort,nameOfTheFirstElementBeforeSort,"First product cost before and after are the same! Sorting Broken!")
     }
 
