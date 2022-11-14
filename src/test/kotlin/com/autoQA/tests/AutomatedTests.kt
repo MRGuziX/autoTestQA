@@ -1,80 +1,95 @@
-package com.autoQA
+package com.autoQA.tests
 
+import com.autoQA.utilities.DriverFunctions
 import org.openqa.selenium.By
-import org.openqa.selenium.WebDriver
-import org.openqa.selenium.chrome.ChromeDriver
 import org.openqa.selenium.support.ui.Select
 import org.testng.Assert
 import org.testng.annotations.AfterTest
 import org.testng.annotations.BeforeTest
 import org.testng.annotations.Test
 
+class AutomatedTests : DriverFunctions() {
 
-class AutomatedTests {
-
-    var driver: WebDriver? = null
-    val standardUserAccountLogin = "standard_user"
-    val userPassword: String = "secret_sauce"
+    val standardUserAccountLogin= "standard_user"
+    val lockedUserAccountLogin= "locked_out_user"
+    val problemUserAccountLogin = "problem_user"
+    val userPassword = "secret_sauce"
     val loginTextfieldSelector = "user-name"
     val passwordTextFieldSelector = "password"
     val loginButtonSelector = "login-button"
 
     @BeforeTest
     fun createDriver() {
-        System.setProperty("webdriver.chrome.driver", "src/main/kotlin/com/autoQA/drivers/chromedriver.exe")
-        driver = ChromeDriver()
+        buildDriver()
     }
 
     @Test(priority = 0)
     fun openWebPage() {
         val url = "https://www.saucedemo.com/"
-        driver!!.get(url)
+        openURL(url)
 
         Assert.assertEquals(driver!!.currentUrl, url, "Web page URL did not match!")
     }
+
+//    @Test(priority = 1)
+//    fun loggingLockedUser() {
+//
+//        val loginTextFieldElement = driver!!.findElement(By.id(loginTextfieldSelector))
+//        loginTextFieldElement.sendKeys(lockedUserAccountLogin)
+//
+//        val passwordTextFieldElement = driver!!.findElement(By.id(passwordTextFieldSelector))
+//        passwordTextFieldElement.sendKeys(userPassword)
+//
+//        val loginButtonElement = driver!!.findElement(By.id(loginButtonSelector))
+//        loginButtonElement.click()
+//
+//        val errorLockedUserLoginMessage = driver!!.findElement(By.className("error-message-container")).text
+//        Assert.assertEquals(
+//            errorLockedUserLoginMessage,
+//            "Epic sadface: Sorry, this user has been locked out.",
+//            "Error message do  not match"
+//        )
+//    }
 
     @Test(priority = 1)
     fun loggingStandardUser() {
 
         val loginTextFieldElement = driver!!.findElement(By.id(loginTextfieldSelector))
         loginTextFieldElement.sendKeys(standardUserAccountLogin)
-
         val passwordTextFieldElement = driver!!.findElement(By.id(passwordTextFieldSelector))
         passwordTextFieldElement.sendKeys(userPassword)
-
-        val loginButtonElement = driver!!.findElement(By.id(loginButtonSelector))
-        loginButtonElement.click()
+        clickOnElementByID("login-button")
     }
 
     @Test(priority = 2)
     fun addItemsToCart() {
 
-        val addToCartFirstElement = driver!!.findElement(By.id("add-to-cart-sauce-labs-bolt-t-shirt"))
-        addToCartFirstElement.click()
+        clickOnElementByID("add-to-cart-sauce-labs-bolt-t-shirt")
+        clickOnElementByID("add-to-cart-sauce-labs-fleece-jacket")
 
-        val addToCartSecondElement = driver!!.findElement(By.id("add-to-cart-sauce-labs-fleece-jacket"))
-        addToCartSecondElement.click()
+        val itemName = getElementTextByCSS("#item_1_title_link .inventory_item_name")
+        val itemPrice = getElementTextByXPATH("//a[@id='item_1_title_link']/..//following-sibling::*[@class='pricebar']/div")
+        val itemCounter = getElementTextByCSS(".shopping_cart_badge")
 
-        val itemNameElement = driver!!.findElement(By.cssSelector("#item_1_title_link .inventory_item_name"))
-        val itemName = itemNameElement.text
-        val itemPriceElement = driver!!.findElement(By.xpath("//a[@id='item_1_title_link']/..//following-sibling::*[@class='pricebar']/div"))
-        val itemPrice = itemPriceElement.text
-        val itemCounterElement = driver!!.findElement(By.cssSelector(".shopping_cart_badge"))
-        val itemCounter = itemCounterElement.text
+        val text = driver!!.findElement(By.cssSelector("#item_1_title_link .inventory_item_name")).text
+
+        println(text)
+
+        println(itemPrice)
+        println(itemName)
+        println(itemCounter)
 
         Assert.assertEquals(itemCounter,"2","Item counts do not match")
 
-        val cartIconElement = driver!!.findElement(By.id("shopping_cart_container"))
-        cartIconElement.click()
+        clickOnElementByID("shopping_cart_container")
 
-        val itemNameInCartElement = driver!!.findElements(By.className("inventory_item_name"))[0].text
-        val itemPriceInCartElement = driver!!.findElements(By.className("inventory_item_price"))[0].text
+        val itemNameInCartElement = getElementsTextByClassName("inventory_item_name",0)
+        val itemPriceInCartElement = getElementsTextByClassName("inventory_item_price",0)
 
         Assert.assertEquals(itemName,itemNameInCartElement,"Names do not match!")
         Assert.assertEquals(itemPrice,itemPriceInCartElement,"Prices do not match!")
 
-        val continueShoppingButtonElement = driver!!.findElement(By.id("continue-shopping"))
-        continueShoppingButtonElement.click()
+        clickOnElementByID("continue-shopping")
     }
 
     @Test(priority = 3)
@@ -151,9 +166,7 @@ class AutomatedTests {
 
         val finishOrderTextElement = driver!!.findElement(By.className("complete-header")).text
         Assert.assertEquals(finishOrderTextElement,"THANK YOU FOR YOUR ORDER", "Finish Order text it is not matching!")
-
     }
-
 
     @AfterTest
     fun tearDownDriver() {
