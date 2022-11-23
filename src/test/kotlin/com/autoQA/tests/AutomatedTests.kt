@@ -90,7 +90,6 @@ class AutomatedTests : DriverFunctions() {
         clickOnElementByID("remove-sauce-labs-bolt-t-shirt")
         clickOnElementByID("add-to-cart-sauce-labs-bolt-t-shirt")
         clickOnElementByID("shopping_cart_container")
-        //Finding button once again, because DOM has changed since previous search and element cant be find again
         clickOnElementByID("remove-sauce-labs-bolt-t-shirt")
 
         val itemCounter = getElementTextByCSS(".shopping_cart_badge")
@@ -103,9 +102,9 @@ class AutomatedTests : DriverFunctions() {
     @Test(priority = 4)
     fun sortingNameFromZtoA () {
 
-        val nameOfTheFirstElementBeforeSort = getOneOfTheElementFromList("inventory_item_name",0)
+        val nameOfTheFirstElementBeforeSort = getElementsTextByClassName("inventory_item_name",0)
         selectFromDropDown("product_sort_container","Name (Z to A)")
-        val nameOfTheFirstElementAfterSort = getOneOfTheElementFromList("inventory_item_name",0)
+        val nameOfTheFirstElementAfterSort = getElementsTextByClassName("inventory_item_name",0)
 
         Assert.assertNotEquals(nameOfTheFirstElementAfterSort,nameOfTheFirstElementBeforeSort,"First product before and after are the same! Sorting Broken!")
         }
@@ -113,13 +112,10 @@ class AutomatedTests : DriverFunctions() {
     @Test(priority = 5)
     fun sortingPriceFromLowestToHighest () {
 
-        val sortDropdownElement = Select(driver!!.findElement(By.cssSelector(".product_sort_container")))
-        sortDropdownElement.selectByVisibleText("Price (low to high)")
-
-        val nameOfTheFirstElementBeforeSort = driver!!.findElements(By.className("inventory_item_price"))[0].text
-        //Finding button once again, because DOM has changed since previous search and element cant be find again
-        val nameOfTheFirstElementAfterSort = Select(driver!!.findElement(By.cssSelector(".product_sort_container")))
-        nameOfTheFirstElementAfterSort.selectByVisibleText("Price (high to low)")
+        selectFromDropDown("product_sort_container","Price (low to high)")
+        val nameOfTheFirstElementBeforeSort = getElementsTextByClassName("inventory_item_name",0)
+        selectFromDropDown("product_sort_container","Price (high to low)")
+        val nameOfTheFirstElementAfterSort = getElementsTextByClassName("inventory_item_name",0)
 
         Assert.assertNotEquals(nameOfTheFirstElementAfterSort,nameOfTheFirstElementBeforeSort,"First product cost before and after are the same! Sorting Broken!")
     }
@@ -127,27 +123,21 @@ class AutomatedTests : DriverFunctions() {
     @Test(priority = 6)
     fun checkoutFormFill() {
 
-        val cartIconElement = driver!!.findElement(By.id("shopping_cart_container"))
-        cartIconElement.click()
+        clickOnElementByID("shopping_cart_container")
+        clickOnElementByID("checkout")
+        enterDataByID("first-name","First Name")
+        enterDataByID("last-name","Last Name")
+        enterDataByID("postal-code","12-123")
+        clickOnElementByID("continue")
+        clickOnElementByID("finish")
 
-        val checkoutButtonElement = driver!!.findElement(By.id("checkout"))
-        checkoutButtonElement.click()
-
-        val firstNameTextFieldElement = driver!!.findElement(By.id("first-name"))
-        val lastNameTextFieldElement = driver!!.findElement(By.id("last-name"))
-        val postalCodeTextFieldElement = driver!!.findElement(By.id("postal-code"))
-        val continueButtonElement = driver!!.findElement((By.id("continue")))
-
-        firstNameTextFieldElement.sendKeys("First Name")
-        lastNameTextFieldElement.sendKeys("Last Name")
-        postalCodeTextFieldElement.sendKeys("12-123")
-        continueButtonElement.click()
-
-        val finishButtonElement = driver!!.findElement(By.id("finish"))
-        finishButtonElement.click()
-
-        val finishOrderTextElement = driver!!.findElement(By.className("complete-header")).text
+        val finishOrderTextElement = getElementTextByClassName("complete-header")
         Assert.assertEquals(finishOrderTextElement,"THANK YOU FOR YOUR ORDER", "Finish Order text it is not matching!")
+    }
+
+    @Test(priority = 7)
+    fun checkOutFormWarnings() {
+
     }
 
     @AfterTest

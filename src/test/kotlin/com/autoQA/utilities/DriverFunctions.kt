@@ -35,17 +35,20 @@ open class DriverFunctions {
         return driver!!.findElement(By.xpath(elementXPATH)).text
      }
 
-     fun getElementsTextByClassName (className: String,position: Int): String?{
-         return driver!!.findElements(By.className(className))[position].text
+    fun getElementTextByClassName (elementClassName: String): String? {
+        return driver!!.findElement(By.className(elementClassName)).text
      }
 
-    // TODO: Delete that funciotn duplicate of code 
-    fun getOneOfTheElementFromList(className: String,position: Int): String?{
-        return driver!!.findElements(By.className(className))[position].text
-    }
+     fun getElementsTextByClassName (className: String, position: Int): String?{
+         return driver!!.findElements(By.className(className))[position].text
+     }
 
     fun selectFromDropDown(dropDownClassName: String, visibleText: String ) {
         val sortDropdownElement = Select(driver!!.findElement(By.className(dropDownClassName)))
         sortDropdownElement.selectByVisibleText(visibleText)
+    }
+
+    fun enterDataByID(nameID: String, value: String) {
+        driver!!.findElement(By.id(nameID)).sendKeys(value)
     }
 }
