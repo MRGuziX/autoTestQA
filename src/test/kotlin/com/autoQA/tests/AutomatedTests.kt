@@ -13,12 +13,12 @@ class AutomatedTests : DriverFunctions() {
     val loginTextfieldSelector = "user-name"
     val passwordTextFieldSelector = "password"
 
-    @BeforeTest
+    @BeforeTest(groups = ["Smoke Tests"])
     fun createDriver() {
         buildDriver()
     }
 
-    @Test(priority = 0, suiteName = "smoke")
+    @Test(priority = 0, groups = ["Smoke Tests"])
     fun openWebPage() {
         val url = "https://www.saucedemo.com/"
         openURL(url)
@@ -26,7 +26,7 @@ class AutomatedTests : DriverFunctions() {
         Assert.assertEquals(driver.currentUrl, url, "Web page URL did not match!")
     }
 
-    @Test(priority = 1, suiteName = "smoke")
+    @Test(priority = 1, groups = ["Smoke Tests"])
     fun loggingStandardUser() {
 
         enterDataByID(loginTextfieldSelector,standardUserAccountLogin)
@@ -34,7 +34,7 @@ class AutomatedTests : DriverFunctions() {
         clickOnElementByID("login-button")
     }
 
-    @Test(priority = 2, suiteName = "smoke")
+    @Test(priority = 2, groups = ["Smoke Tests"])
     fun addItemsToCart() {
 
         clickOnElementByID("add-to-cart-sauce-labs-bolt-t-shirt")
@@ -57,7 +57,7 @@ class AutomatedTests : DriverFunctions() {
         clickOnElementByID("continue-shopping")
     }
 
-    @Test(priority = 3, suiteName = "smoke")
+    @Test(priority = 3, groups = ["Smoke Tests"])
     fun removeItemFromCart() {
 
         clickOnElementByID("remove-sauce-labs-bolt-t-shirt")
@@ -72,7 +72,7 @@ class AutomatedTests : DriverFunctions() {
         clickOnElementByID("continue-shopping")
     }
 
-    @Test(priority = 4, suiteName = "smoke")
+    @Test(priority = 4, groups = ["Smoke Tests"])
     fun sortingNameFromZtoA () {
 
         val nameOfTheFirstElementBeforeSort = getElementsTextByClassName("inventory_item_name",0)
@@ -82,7 +82,7 @@ class AutomatedTests : DriverFunctions() {
         Assert.assertNotEquals(nameOfTheFirstElementAfterSort,nameOfTheFirstElementBeforeSort,"First product before and after are the same! Sorting Broken!")
         }
 
-    @Test(priority = 5, suiteName = "smoke")
+    @Test(priority = 5, groups = ["Smoke Tests"])
     fun sortingPriceFromLowestToHighest () {
 
         selectFromDropDown("product_sort_container","Price (low to high)")
@@ -93,7 +93,7 @@ class AutomatedTests : DriverFunctions() {
         Assert.assertNotEquals(nameOfTheFirstElementAfterSort,nameOfTheFirstElementBeforeSort,"First product cost before and after are the same! Sorting Broken!")
     }
 
-    @Test(priority = 6, suiteName = "smoke")
+    @Test(priority = 6, groups = ["Smoke Tests"])
     fun checkoutFormFill() {
 
         clickOnElementByID("shopping_cart_container")
@@ -108,12 +108,12 @@ class AutomatedTests : DriverFunctions() {
         Assert.assertEquals(finishOrderTextElement,"THANK YOU FOR YOUR ORDER", "Finish Order text it is not matching!")
     }
 
-    @Test(priority = 7, suiteName = "smoke")
+    @Test(priority = 7, groups = ["Smoke Tests"])
     fun checkOutFormWarnings() {
 
     }
 
-    @AfterTest
+    @AfterTest(groups = ["Smoke Tests"])
     fun tearDownDriver() {
         driver.quit()
     }

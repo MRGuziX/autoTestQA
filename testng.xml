@@ -1,4 +1,13 @@
 <!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd" >
-<suite name="smoke" >
-
+<suite name="Test Plan name" >
+    <test name="Feature Name" >
+        <groups>
+            <run>
+                <include name="Smoke Tests"/>
+            </run>
+        </groups>
+        <classes>
+            <class name="com.autoQA.tests.AutomatedTests" />
+        </classes>
+    </test>
 </suite>
