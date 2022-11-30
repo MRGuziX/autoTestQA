@@ -1,7 +1,6 @@
 package com.autoQA.tests
 
 import com.autoQA.utilities.DriverFunctions
-import org.openqa.selenium.By
 import org.testng.Assert
 import org.testng.annotations.AfterTest
 import org.testng.annotations.BeforeTest
@@ -10,57 +9,32 @@ import org.testng.annotations.Test
 class AutomatedTests : DriverFunctions() {
 
     val standardUserAccountLogin= "standard_user"
-    val lockedUserAccountLogin= "locked_out_user"
-    val problemUserAccountLogin = "problem_user"
     val userPassword = "secret_sauce"
     val loginTextfieldSelector = "user-name"
     val passwordTextFieldSelector = "password"
-    val loginButtonSelector = "login-button"
 
     @BeforeTest
     fun createDriver() {
         buildDriver()
     }
 
-    @Test(priority = 0)
+    @Test(priority = 0, suiteName = "smoke")
     fun openWebPage() {
         val url = "https://www.saucedemo.com/"
         openURL(url)
 
-        Assert.assertEquals(driver!!.currentUrl, url, "Web page URL did not match!")
+        Assert.assertEquals(driver.currentUrl, url, "Web page URL did not match!")
     }
 
-//    @Test(priority = 1)
-//    fun loggingLockedUser() {
-//
-//        val loginTextFieldElement = driver!!.findElement(By.id(loginTextfieldSelector))
-//        loginTextFieldElement.sendKeys(lockedUserAccountLogin)
-//
-//        val passwordTextFieldElement = driver!!.findElement(By.id(passwordTextFieldSelector))
-//        passwordTextFieldElement.sendKeys(userPassword)
-//
-//        val loginButtonElement = driver!!.findElement(By.id(loginButtonSelector))
-//        loginButtonElement.click()
-//
-//        val errorLockedUserLoginMessage = driver!!.findElement(By.className("error-message-container")).text
-//        Assert.assertEquals(
-//            errorLockedUserLoginMessage,
-//            "Epic sadface: Sorry, this user has been locked out.",
-//            "Error message do  not match"
-//        )
-//    }
-
-    @Test(priority = 1)
+    @Test(priority = 1, suiteName = "smoke")
     fun loggingStandardUser() {
 
-        val loginTextFieldElement = driver!!.findElement(By.id(loginTextfieldSelector))
-        loginTextFieldElement.sendKeys(standardUserAccountLogin)
-        val passwordTextFieldElement = driver!!.findElement(By.id(passwordTextFieldSelector))
-        passwordTextFieldElement.sendKeys(userPassword)
+        enterDataByID(loginTextfieldSelector,standardUserAccountLogin)
+        enterDataByID(passwordTextFieldSelector,userPassword)
         clickOnElementByID("login-button")
     }
 
-    @Test(priority = 2)
+    @Test(priority = 2, suiteName = "smoke")
     fun addItemsToCart() {
 
         clickOnElementByID("add-to-cart-sauce-labs-bolt-t-shirt")
@@ -83,7 +57,7 @@ class AutomatedTests : DriverFunctions() {
         clickOnElementByID("continue-shopping")
     }
 
-    @Test(priority = 3)
+    @Test(priority = 3, suiteName = "smoke")
     fun removeItemFromCart() {
 
         clickOnElementByID("remove-sauce-labs-bolt-t-shirt")
@@ -98,7 +72,7 @@ class AutomatedTests : DriverFunctions() {
         clickOnElementByID("continue-shopping")
     }
 
-    @Test(priority = 4)
+    @Test(priority = 4, suiteName = "smoke")
     fun sortingNameFromZtoA () {
 
         val nameOfTheFirstElementBeforeSort = getElementsTextByClassName("inventory_item_name",0)
@@ -108,7 +82,7 @@ class AutomatedTests : DriverFunctions() {
         Assert.assertNotEquals(nameOfTheFirstElementAfterSort,nameOfTheFirstElementBeforeSort,"First product before and after are the same! Sorting Broken!")
         }
 
-    @Test(priority = 5)
+    @Test(priority = 5, suiteName = "smoke")
     fun sortingPriceFromLowestToHighest () {
 
         selectFromDropDown("product_sort_container","Price (low to high)")
@@ -119,7 +93,7 @@ class AutomatedTests : DriverFunctions() {
         Assert.assertNotEquals(nameOfTheFirstElementAfterSort,nameOfTheFirstElementBeforeSort,"First product cost before and after are the same! Sorting Broken!")
     }
 
-    @Test(priority = 6)
+    @Test(priority = 6, suiteName = "smoke")
     fun checkoutFormFill() {
 
         clickOnElementByID("shopping_cart_container")
@@ -134,14 +108,14 @@ class AutomatedTests : DriverFunctions() {
         Assert.assertEquals(finishOrderTextElement,"THANK YOU FOR YOUR ORDER", "Finish Order text it is not matching!")
     }
 
-    @Test(priority = 7)
+    @Test(priority = 7, suiteName = "smoke")
     fun checkOutFormWarnings() {
 
     }
 
     @AfterTest
     fun tearDownDriver() {
-        driver!!.quit()
+        driver.quit()
     }
 
 }
