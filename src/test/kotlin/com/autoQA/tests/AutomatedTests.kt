@@ -5,10 +5,11 @@ import org.testng.Assert
 import org.testng.annotations.AfterTest
 import org.testng.annotations.BeforeTest
 import org.testng.annotations.Test
+import pages.LoginPage
 
 class AutomatedTests : DriverFunctions() {
 
-    private val loginPage = pages.LoginPage()
+    private val loginPage = LoginPage()
 
     @BeforeTest
     fun createDriver() {

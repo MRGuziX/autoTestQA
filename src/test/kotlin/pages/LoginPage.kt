@@ -9,13 +9,15 @@ open class LoginPage : DriverFunctions() {
     private val loginTextfieldSelector = "user-name"
     private val passwordTextFieldSelector = "password"
 
+    init {
+        buildDriver()
+    }
 
     fun enterLogin() {
         enterDataByID(loginTextfieldSelector,standardUserAccountLogin)
     }
 
     fun enterPassword() {
-        buildDriver()
         enterDataByID(passwordTextFieldSelector,userPassword)
     }
 
