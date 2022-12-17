@@ -8,12 +8,9 @@ import org.testng.annotations.Test
 
 class AutomatedTests : DriverFunctions() {
 
-    val standardUserAccountLogin= "standard_user"
-    val userPassword = "secret_sauce"
-    val loginTextfieldSelector = "user-name"
-    val passwordTextFieldSelector = "password"
+    private val loginPage = pages.LoginPage()
 
-    @BeforeTest(groups = ["Smoke Tests"])
+    @BeforeTest
     fun createDriver() {
         buildDriver()
     }
@@ -29,9 +26,9 @@ class AutomatedTests : DriverFunctions() {
     @Test(priority = 1, groups = ["Smoke Tests"])
     fun loggingStandardUser() {
 
-        enterDataByID(loginTextfieldSelector,standardUserAccountLogin)
-        enterDataByID(passwordTextFieldSelector,userPassword)
-        clickOnElementByID("login-button")
+        loginPage.enterLogin()
+        loginPage.enterPassword()
+        loginPage.clickOnLoginButton()
     }
 
     @Test(priority = 2, groups = ["Smoke Tests"])
