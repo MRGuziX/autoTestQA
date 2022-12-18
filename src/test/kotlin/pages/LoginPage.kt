@@ -3,26 +3,21 @@ package pages
 import com.autoQA.utilities.DriverFunctions
 
 open class LoginPage : DriverFunctions() {
-
     private val standardUserAccountLogin = "standard_user"
     private val userPassword = "secret_sauce"
     private val loginTextfieldSelector = "user-name"
     private val passwordTextFieldSelector = "password"
 
-    init {
-        buildDriver()
-    }
 
     fun enterLogin() {
-        enterDataByID(loginTextfieldSelector,standardUserAccountLogin)
+       enterDataByID(loginTextfieldSelector, standardUserAccountLogin)
     }
 
     fun enterPassword() {
-        enterDataByID(passwordTextFieldSelector,userPassword)
+        enterDataByID(passwordTextFieldSelector, userPassword)
     }
 
     fun clickOnLoginButton() {
         clickOnElementByID("login-button")
     }
-
 }

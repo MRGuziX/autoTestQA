@@ -8,11 +8,14 @@ import org.openqa.selenium.support.ui.Select
 
 open class DriverFunctions {
 
-    lateinit var driver: WebDriver
+    companion object {
+        lateinit var driver: WebDriver
+    }
 
-    fun buildDriver() {
+    fun buildDriver(): WebDriver {
         System.setProperty("webdriver.chrome.driver", "src/main/kotlin/com/autoQA/drivers/chromedriver.exe")
-        driver = ChromeDriver()
+        driver =  ChromeDriver()
+        return driver
     }
 
      fun openURL(url: String) {
